@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { type AgentState, useRoomContext, useVoiceAssistant } from '@livekit/components-react';
-import { toastAlert } from '@/components/livekit/alert-toast';
+import { toastAlert } from '@/app/components/livekit/alert-toast';
 
 function isAgentAvailable(agentState: AgentState) {
   return agentState == 'listening' || agentState == 'thinking' || agentState == 'speaking';

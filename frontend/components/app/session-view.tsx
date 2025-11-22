@@ -3,13 +3,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import type { AppConfig } from '@/app-config';
-import { ChatTranscript } from '@/components/app/chat-transcript';
-import { PreConnectMessage } from '@/components/app/preconnect-message';
-import { TileLayout } from '@/components/app/tile-layout';
+import { ChatTranscript } from '@/app/components/app/chat-transcript';
+import { PreConnectMessage } from '@/app/components/app/preconnect-message';
+import { TileLayout } from '@/app/components/app/tile-layout';
 import {
   AgentControlBar,
   type ControlBarControls,
-} from '@/components/livekit/agent-control-bar/agent-control-bar';
+} from '@/app/components/livekit/agent-control-bar/agent-control-bar';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { useConnectionTimeout } from '@/hooks/useConnectionTimout';
 import { useDebugMode } from '@/hooks/useDebug';

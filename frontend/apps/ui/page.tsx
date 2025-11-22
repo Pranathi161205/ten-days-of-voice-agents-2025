@@ -1,23 +1,23 @@
 import { type VariantProps } from 'class-variance-authority';
 import { Track } from 'livekit-client';
 import { MicrophoneIcon } from '@phosphor-icons/react/dist/ssr';
-import { AgentControlBar } from '@/components/livekit/agent-control-bar/agent-control-bar';
-import { TrackDeviceSelect } from '@/components/livekit/agent-control-bar/track-device-select';
-import { TrackSelector } from '@/components/livekit/agent-control-bar/track-selector';
-import { TrackToggle } from '@/components/livekit/agent-control-bar/track-toggle';
-import { Alert, AlertDescription, AlertTitle, alertVariants } from '@/components/livekit/alert';
-import { AlertToast } from '@/components/livekit/alert-toast';
-import { Button, buttonVariants } from '@/components/livekit/button';
-import { ChatEntry } from '@/components/livekit/chat-entry';
+import { AgentControlBar } from '@/app/components/livekit/agent-control-bar/agent-control-bar';
+import { TrackDeviceSelect } from '@/app/components/livekit/agent-control-bar/track-device-select';
+import { TrackSelector } from '@/app/components/livekit/agent-control-bar/track-selector';
+import { TrackToggle } from '@/app/components/livekit/agent-control-bar/track-toggle';
+import { Alert, AlertDescription, AlertTitle, alertVariants } from '@/app/components/livekit/alert';
+import { AlertToast } from '@/app/components/livekit/alert-toast';
+import { Button, buttonVariants } from '@/app/components/livekit/button';
+import { ChatEntry } from '@/app/components/livekit/chat-entry';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/livekit/select';
-import { ShimmerText } from '@/components/livekit/shimmer-text';
-import { Toggle, toggleVariants } from '@/components/livekit/toggle';
+} from '@/app/components/livekit/select';
+import { ShimmerText } from '@/app/components/livekit/shimmer-text';
+import { Toggle, toggleVariants } from '@/app/components/livekit/toggle';
 import { cn } from '@/lib/utils';
 
 type toggleVariantsType = VariantProps<typeof toggleVariants>['variant'];

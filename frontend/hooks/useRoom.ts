@@ -1,16 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Room, RoomEvent, TokenSource } from 'livekit-client';
 import { AppConfig } from '@/app-config';
-import { toastAlert } from '@/components/livekit/alert-toast';
+import { toastAlert } from '@/app/components/livekit/alert-toast';
 
 export function useRoom(appConfig: AppConfig) {
   const aborted = useRef(false);
   const room = useMemo(() => new Room(), []);
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const [isMicEnabled, setIsMicEnabled] = useState(false);
 
+  // Handle room events
   useEffect(() => {
     function onDisconnected() {
       setIsSessionActive(false);
+      setIsMicEnabled(false);
     }
 
     function onMediaDevicesError(error: Error) {
@@ -29,6 +32,7 @@ export function useRoom(appConfig: AppConfig) {
     };
   }, [room]);
 
+  // Clean up on unmount
   useEffect(() => {
     return () => {
       aborted.current = true;
@@ -36,6 +40,7 @@ export function useRoom(appConfig: AppConfig) {
     };
   }, [room]);
 
+  // Token source to fetch connection details
   const tokenSource = useMemo(
     () =>
       TokenSource.custom(async () => {
@@ -68,41 +73,57 @@ export function useRoom(appConfig: AppConfig) {
     [appConfig]
   );
 
-  const startSession = useCallback(() => {
+  // Start room session (mic disabled by default)
+  const startSession = useCallback(async () => {
     setIsSessionActive(true);
 
     if (room.state === 'disconnected') {
-      const { isPreConnectBufferEnabled } = appConfig;
-      Promise.all([
-        room.localParticipant.setMicrophoneEnabled(true, undefined, {
-          preConnectBuffer: isPreConnectBufferEnabled,
-        }),
-        tokenSource
-          .fetch({ agentName: appConfig.agentName })
-          .then((connectionDetails) =>
-            room.connect(connectionDetails.serverUrl, connectionDetails.participantToken)
-          ),
-      ]).catch((error) => {
-        if (aborted.current) {
-          // Once the effect has cleaned up after itself, drop any errors
-          //
-          // These errors are likely caused by this effect rerunning rapidly,
-          // resulting in a previous run `disconnect` running in parallel with
-          // a current run `connect`
-          return;
-        }
+      try {
+        const connectionDetails = await tokenSource.fetch({ agentName: appConfig.agentName });
+        await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
+
+        console.log('Connected to LiveKit. Microphone is disabled by default.');
+      } catch (error) {
+        if (aborted.current) return;
 
         toastAlert({
-          title: 'There was an error connecting to the agent',
+          title: 'Error connecting to the agent',
           description: `${error.name}: ${error.message}`,
         });
-      });
+        console.error('startSession error:', error);
+      }
     }
   }, [room, appConfig, tokenSource]);
 
+  // End session
   const endSession = useCallback(() => {
     setIsSessionActive(false);
-  }, []);
+    setIsMicEnabled(false);
+    room.localParticipant.setMicrophoneEnabled(false).catch(() => {});
+  }, [room]);
 
-  return { room, isSessionActive, startSession, endSession };
+  // Toggle microphone on/off
+  const toggleMic = useCallback(async (enable?: boolean) => {
+    try {
+      const newState = enable ?? !isMicEnabled;
+      await room.localParticipant.setMicrophoneEnabled(newState);
+      setIsMicEnabled(newState);
+      console.log(`Microphone ${newState ? 'enabled' : 'disabled'}`);
+    } catch (error) {
+      console.error('Error toggling mic:', error);
+      toastAlert({
+        title: 'Error toggling microphone',
+        description: `${error.name}: ${error.message}`,
+      });
+    }
+  }, [room, isMicEnabled]);
+
+  return {
+    room,
+    isSessionActive,
+    startSession,
+    endSession,
+    isMicEnabled,
+    toggleMic,
+  };
 }

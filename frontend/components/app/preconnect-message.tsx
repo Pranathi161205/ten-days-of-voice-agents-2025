@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'motion/react';
 import { type ReceivedChatMessage } from '@livekit/components-react';
-import { ShimmerText } from '@/components/livekit/shimmer-text';
+import { ShimmerText } from '@/app/components/livekit/shimmer-text';
 import { cn } from '@/lib/utils';
 
 const MotionMessage = motion.create('p');

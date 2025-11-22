@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/livekit/select';
+} from '@/app/components/livekit/select';
 import { cn } from '@/lib/utils';
 
 type DeviceSelectProps = React.ComponentProps<typeof SelectTrigger> & {

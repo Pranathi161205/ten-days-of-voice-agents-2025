@@ -2,7 +2,7 @@
 
 import { AnimatePresence, type HTMLMotionProps, motion } from 'motion/react';
 import { type ReceivedChatMessage } from '@livekit/components-react';
-import { ChatEntry } from '@/components/livekit/chat-entry';
+import { ChatEntry } from '@/app/components/livekit/chat-entry';
 
 const MotionContainer = motion.create('div');
 const MotionChatEntry = motion.create(ChatEntry);

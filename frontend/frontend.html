@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Day 1 Voice Agent</title>
+</head>
+<body>
+  <h1>Day 1 Voice Agent</h1>
+  <input type="text" id="input" placeholder="Type message">
+  <button onclick="sendMessage()">Send</button>
+  <ul id="messages"></ul>
+
+  <script>
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws");
+    const messages = document.getElementById("messages");
+
+    ws.onmessage = function(event) {
+      const li = document.createElement("li");
+      li.textContent = "Agent: " + event.data;
+      messages.appendChild(li);
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("input");
+      ws.send(input.value);
+      const li = document.createElement("li");
+      li.textContent = "You: " + input.value;
+      messages.appendChild(li);
+      input.value = "";
+    }
+  </script>
+</body>
+</html>
